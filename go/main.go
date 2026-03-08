@@ -28,7 +28,7 @@ func main() {
 
 	// Your SQS queue URL from terraform output queue_url
 	// Format: https://sqs.us-east-1.amazonaws.com/123456789012/sqs-endpoint-test-queue
-	queueURL := "https://sqs.us-east-1.amazonaws.com/162343470963/sqs-endpoint-test-queue"
+	queueURL := "https://sqs.us-east-1.amazonaws.com/898961940126/sqs-endpoint-test-queue"
 
 	// -------------------------------------------------------
 	// SCENARIO 1 — THE BROKEN WAY
