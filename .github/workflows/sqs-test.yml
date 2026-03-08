@@ -1,0 +1,54 @@
+name: SQS VPC Endpoint Bug Reproduction
+
+on:
+  # Trigger the workflow on every push to the main branch
+  push:
+    branches: [main]
+  # Also allow manual triggering from the GitHub Actions UI
+  workflow_dispatch:
+
+# These permissions are required for the OIDC token to be issued
+# id-token: write allows the workflow to request a JWT from GitHub's OIDC provider
+# contents: read allows the workflow to checkout the repository code
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  sqs-endpoint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout our repository code onto the runner
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Configure AWS credentials using OIDC
+      # This is where AssumeRoleWithWebIdentity happens
+      # GitHub provides a JWT token which is exchanged for AWS credentials
+      # by calling sts:AssumeRoleWithWebIdentity
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # The role ARN that GitHub Actions will assume via WebIdentity
+          role-to-assume: arn:aws:iam::162343470963:role/github-actions-sqs-test-role
+          # The region where our SQS queue lives
+          aws-region: us-east-1
+
+      # Step 3: Install Go on the runner
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      # Step 4: Download Go dependencies
+      - name: Download dependencies
+        working-directory: ./go
+        run: go mod tidy
+
+      # Step 5: Run our test which demonstrates the bug and the fix
+      # The runner already has AWS credentials from Step 2 via AssumeRoleWithWebIdentity
+      # So any WithBaseEndpoint bleed-through will affect real STS credential refresh calls
+      - name: Run SQS endpoint test
+        working-directory: ./go
+        run: go run main.go

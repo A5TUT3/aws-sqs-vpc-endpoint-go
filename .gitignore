@@ -1,0 +1,12 @@
+# Terraform state files — contain sensitive infrastructure details
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+
+# Go build artifacts
+go/sqs-endpoint-test
+
+# SSH keys — never commit private keys
+*.pem
+*.key
