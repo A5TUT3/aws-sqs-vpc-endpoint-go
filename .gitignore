@@ -1,6 +1,7 @@
 # Terraform state files — contain sensitive infrastructure details
 .terraform/
 terraform.tfstate
+terraform.tfstate.*
 terraform.tfstate.backup
 .terraform.lock.hcl
 

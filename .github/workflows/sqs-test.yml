@@ -31,7 +31,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           # The role ARN that GitHub Actions will assume via WebIdentity
-          role-to-assume: arn:aws:iam::162343470963:role/github-actions-sqs-test-role
+          role-to-assume: arn:aws:iam::898961940126:role/github-actions-sqs-test-role
           # The region where our SQS queue lives
           aws-region: us-east-1
 
